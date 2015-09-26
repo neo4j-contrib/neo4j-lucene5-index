@@ -1,0 +1,39 @@
+== Neo4j Lucene 5 integration
+
+This is still experimental and preliminary and completely unsupported.
+It only works with new datastores or databases with all `schema` and `index` directories removed.
+
+The integration is built on top of Neo4j 2.3-SNAPSHOT
+
+[NOTE]
+If you want to try this on an existing database, make a backup before!
+
+=== Installation
+
+Build the library with mvn clean install dependency:copy-dependencies
+
+Remove neo4j-lucene-index.jar and all lucene jars from your Neo4j server.
+
+----
+# build
+mvn clean install dependency:copy-dependencies
+
+# set your neo4j server path
+export NEO=/path/to/neo4j-community-2.3-SNAPSHOT
+
+$NEO/bin/neo4j stop
+
+mkdir $NEO/backup
+mv $NEO/data/graph.db/schema $NEO/data/graph.db/index $NEO/backup
+mv $NEO/lib/lucene-core-3.6.2.jar $NEO/lib/neo4j-lucene-index-2.3-SNAPSHOT.jar $NEO/backup
+
+cp target/neo4j-lucene5-index-2.3-SNAPSHOT.jar \
+target/dependency/lucene-analyzers-common-5.3.0.jar \
+target/dependency/lucene-backward-codecs-5.3.0.jar \
+target/dependency/lucene-core-5.3.0.jar \
+target/dependency/lucene-queries-5.3.0.jar \
+target/dependency/lucene-queryparser-5.3.0.jar \
+target/dependency/lucene-sandbox-5.3.0.jar $NEO/lib
+
+$NEO/bin/neo4j start
+----
